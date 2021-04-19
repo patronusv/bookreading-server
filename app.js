@@ -1,0 +1,49 @@
+const express = require('express');
+const logger = require('morgan');
+const cors = require('cors');
+const path = require('path');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+dotenv.config();
+
+const PORT = process.env.PORT || 5000;
+const { DB_HOST } = process.env;
+
+const app = express();
+
+const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
+
+app.use(logger(formatsLogger));
+app.use(cors());
+app.use(express.json());
+
+app.use((req, res) => {
+  res.status(404).json({ message: 'Not found' });
+});
+
+app.use((err, req, res, next) => {
+  res.status(500).json({
+    message: err.message,
+  });
+});
+
+mongoose.Promise = global.Promise;
+
+const connection = mongoose.connect(DB_HOST, {
+  promiseLibrary: global.Promise,
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+});
+
+connection
+  .then(() => {
+    app.listen(PORT, function () {
+      console.log(`Server running. Use our API on port: ${PORT}`);
+    });
+  })
+  .catch(err => {
+    console.log(`Server not running. Error message: ${err.message}`);
+    process.exit(1);
+  });
