@@ -12,9 +12,6 @@ const { DB_HOST } = process.env
 
 
 const bookRouter = require('./routes/api/book')
-
-const app = express();
-
 const authRouter = require('./routes/api/authRoutes')
 
 
@@ -29,7 +26,6 @@ app.use(express.json())
 require('./config/passport')
 
 app.use('/api/auth', authRouter)
-
 app.use('/api/library', bookRouter);
 
 app.use((req, res) => {

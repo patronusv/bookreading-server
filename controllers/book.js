@@ -1,10 +1,9 @@
  const {addBook, getBook} = require('../models/services/book')
 
  const add = async (req, res, next) => {
-    // const userId = req.user._id
-    console.log(req.body)
+     const userId =  req.user._id
        try {
-        const result = await addBook(req.body);
+        const result = await addBook(userId, req.body);
         return res.json({status: 'success', code: 201, data: result})
     }catch(e) {
         next(e)
