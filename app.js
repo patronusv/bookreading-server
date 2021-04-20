@@ -9,7 +9,11 @@ dotenv.config()
 const PORT = process.env.PORT || 5000
 const { DB_HOST } = process.env
 
+
+
+const bookRouter = require('./routes/api/book')
 const authRouter = require('./routes/api/authRoutes')
+
 
 const app = express()
 
@@ -22,6 +26,7 @@ app.use(express.json())
 require('./config/passport')
 
 app.use('/api/auth', authRouter)
+app.use('/api/library', bookRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' })
