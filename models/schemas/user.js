@@ -11,6 +11,9 @@ const userSchema = new Schema(
     password: {
       type: String,
     },
+    name: {
+      type: String,
+    },
     token: String,
   },
   { versionKey: false }

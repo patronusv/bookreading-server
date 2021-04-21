@@ -2,12 +2,6 @@ const validator = require('validator')
 
 module.exports.validateUserFields = (req, res, next) => {
   const { email, password } = req.body
-  if (!email || !password) {
-    return res.status(400).json({
-      code: 400,
-      message: 'Missing required email or password field.',
-    })
-  }
   let validationMessage = ''
   if (!validator.isEmail(email)) {
     validationMessage += 'Email validation failed. '
