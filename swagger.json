@@ -1,0 +1,282 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "version": "1.0.0",
+        "title": "Books reading",
+        "description": "Documentation for server use"
+    },
+    "consumes": ["application/json"],
+    "produces": ["application/json"],
+    "servers": [{"url": "http://localhost:5000/api"}],
+    "tags": [
+        {
+            "name": "auth",
+            "description": "authorization endpoints"
+        }
+    ],
+
+    "paths": {
+        "/auth/register": {
+            "post": {
+                "tags": ["auth"],
+                "summary": "user registration",
+                "parameters": [],
+                "requestBody": {
+                    "description": "registration object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegistrationAndLoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "missing required field or field validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegistrationAndLoginValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "email in use",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegistrationEmailInUseErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "user created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegistrationSuccessResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "tags": ["auth"],
+                "summary": "user login",
+                "parameters": [],
+                "requestBody": {
+                    "description": "login object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegistrationAndLoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "missing required field or field validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegistrationAndLoginValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "email or password is wrong",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "user success login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginSuccessResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": ["auth"],
+                "summary": "user logout",
+                "parameters": [],
+                "requestBody": {},
+                "security": [{"Bearer": []}],
+                "responses": {
+                    "401": {
+                        "description": "not authorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LogoutErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "logout success"
+                    }
+                }
+            }
+        }
+    },
+
+    "components": {
+        "schemas": {
+            "RegistrationAndLoginRequest": {
+                "type": "object",
+                "required": ["email, password"],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "user email adress",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "user password",
+                        "example": "Qwerty_1"
+                    }
+                }
+            },
+            "RegistrationAndLoginValidationErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 400
+                    },
+                    "message": {
+                        "type": "string",
+                        "decription": "problem description",
+                        "example": "Missing required email or password field."
+                    }
+                }
+            },
+            "RegistrationEmailInUseErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 409
+                    },
+                    "message": {
+                        "type": "string",
+                        "decription": "problem description",
+                        "example": "Email in use"
+                    }
+                }
+            },
+            "RegistrationSuccessResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 201
+                    },
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "email": {
+                                "type": "string",
+                                "description": "email of new user",
+                                "format": "email"
+                            }
+                        }
+                    }
+                }
+            },
+            "LoginErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 401
+                    },
+                    "message": {
+                        "type": "string",
+                        "decription": "problem description",
+                        "example": "Email or password is wrong"
+                    }
+                }
+            },
+            "LoginSuccessResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 200
+                    },
+                    "token": {
+                        "type": "string",
+                        "description": "user session token",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRpbWNoZXI5MTFAZ21haWwuY29tIiwiaWF0IjoxNjE4OTQxMzc4LCJleHAiOjE2MTg5NDQ5Nzh9.tgNhlO1wfIHvg0NWqyargq1KB5m4UnSWHG6YZ7N1_OM"
+                    },
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "description": "user id",
+                                "example": "607f15b136cdb42c38bae2b8"
+                            },
+                            "email": {
+                                "type": "string",
+                                "description": "email of signed user",
+                                "format": "email"
+                            }
+                        }
+                    }
+                }
+            },
+            "LogoutErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 401
+                    },
+                    "message": {
+                        "type": "string",
+                        "decription": "problem description",
+                        "example": "Not authorized"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "Bearer": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}
