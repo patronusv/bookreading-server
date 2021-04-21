@@ -1,4 +1,4 @@
- const {addBook, getBook} = require('../models/services/book')
+ const {addBook, getBook} = require('../models/services/bookServices')
 
  const add = async (req, res, next) => {
      const userId =  req.user._id

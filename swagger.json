@@ -12,6 +12,10 @@
         {
             "name": "auth",
             "description": "authorization endpoints"
+        },
+          {
+            "name": "Book",
+            "description": "Library endpoints"
         }
     ],
 
@@ -139,6 +143,38 @@
                     }
                 }
             }
+        },
+        "/library" : {
+            "post" : {
+                "tags": ["library"],
+                "summary": "add book",
+                "parameters": [],
+                "requestBody": {
+                    "description": "book object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddBookToLibraryRequest"
+                            }
+                        }
+                    }
+                },
+                "security": [{"Bearer": []}],
+                "responses": {
+                    "201": {
+                        "description": "book added",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AddBookToLibrarySuccess"
+                                }
+                            }
+                        }
+                    }
+                }
+                
+            }
         }
     },
 
@@ -146,7 +182,7 @@
         "schemas": {
             "RegistrationAndLoginRequest": {
                 "type": "object",
-                "required": ["email, password"],
+                "required": ["email", "password"],
                 "properties": {
                     "email": {
                         "type": "string",
@@ -267,6 +303,72 @@
                         "type": "string",
                         "decription": "problem description",
                         "example": "Not authorized"
+                    }
+                }
+            },
+             "AddBookToLibraryRequest": {
+                "type": "object",
+                "required": ["title", "pages"],
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "description": "title of a book",
+                        "example": "A Song of Ice and Fire"
+                    },
+                    "author": {
+                        "type": "string",
+                        "description": "author of a book",
+                        "example": "George R. R. Martin"
+                    },
+                    "year": {
+                        "type": "integer",
+                        "description": "year of publication",
+                        "example": 2012
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "description": "number of pages",
+                        "example": 503
+                    }
+                }
+            },
+            "AddBookToLibrarySuccess": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 201
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "status code",
+                        "example": "success"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "title": {
+                                "type": "string",
+                                "description": "title of a book",
+                                "example": "A Song of Ice and Fire"
+                            },
+                            "author": {
+                                "type": "string",
+                                "description": "author of a book",
+                                "example": "George R. R. Martin"
+                            },
+                            "year": {
+                                "type": "integer",
+                                "description": "year of publication",
+                                "example": 2012
+                            },
+                            "pages": {
+                                "type": "integer",
+                                "description": "number of pages",
+                                "example": 503
+                            }
+                        }
                     }
                 }
             }
