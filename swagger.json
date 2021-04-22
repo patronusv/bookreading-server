@@ -144,6 +144,56 @@
                 }
             }
         },
+        "/auth/user": {
+            "post": {
+                "tags": ["auth"],
+                "summary": "user login by google token",
+                "parameters": [],
+                "requestBody": {
+                    "description": "login object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "missing required field",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MissingTokenErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "wrong token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "user success login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginSuccessResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/library" : {
             "post" : {
                 "tags": ["Book"],
@@ -407,6 +457,47 @@
                         "type": "string",
                         "decription": "problem description",
                         "example": "Not authorized or no token provided"
+                    }
+                }
+            },
+            "UserRequest": {
+                "type": "object",
+                "required": ["token"],
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "description": "token from google auth",
+                        "example": "b9908e86-ae11-4613-b22e-a57ec919e199"
+                    }
+                }
+            },
+            "MissingTokenErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 400
+                    },
+                    "message": {
+                        "type": "string",
+                        "decription": "problem description",
+                        "example": "Token is required"
+                    }
+                }
+            },
+            "UserErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 401
+                    },
+                    "message": {
+                        "type": "string",
+                        "decription": "problem description",
+                        "example": "Wrong token, user not found"
                     }
                 }
             },

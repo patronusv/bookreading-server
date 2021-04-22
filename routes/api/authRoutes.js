@@ -15,4 +15,8 @@ router.post(
 router.post('/login', loginRequire, validateUserFields, authControllers.login)
 router.post('/logout', guard, authControllers.logout)
 
+router.get('/google', authControllers.googleAuth)
+router.get('/google-redirect', authControllers.googleRedirect)
+router.post('/user', authControllers.googleLogin)
+
 module.exports = router
