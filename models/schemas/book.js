@@ -10,11 +10,11 @@ const bookSchema = new Schema (
         default: 'Unknown author'
     },
     year: {
-        type: String,
-        default: 'Unknown year'
+        type: Number,
+        default: null
     },
     pages: {
-        type: String,
+        type: Number,
         require: [true, 'Введіть кількусть сторінок']
     },
     status: {
@@ -23,8 +23,16 @@ const bookSchema = new Schema (
         default: 'WillRead',
     },
     currentPage: {
+        type: Number,
+        default: 0
+    },
+    review: {
         type: String,
-        default: '0'
+        default: null            
+    },
+    rating: {
+        type: String,
+        default: null
     },
     owner: {
       type: SchemaTypes.ObjectId,

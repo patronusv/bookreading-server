@@ -11,7 +11,7 @@ dotenv.config()
 const PORT = process.env.PORT || 5000
 const { DB_HOST } = process.env
 
-const bookRouter = require('./routes/api/book')
+const bookRouter = require('./routes/api/bookRoutes')
 const authRouter = require('./routes/api/authRoutes')
 const trainingRouter = require('./routes/api/trainingRoutes')
 
