@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const authServices = require('../models/services/authServices')
+const { getBook } = require('../models/services/bookServices')
 
 const register = async (req, res, next) => {
   try {
@@ -42,6 +43,7 @@ const login = async (req, res, next) => {
       expiresIn: '1h',
     })
     await authServices.updateToken(user.id, token)
+    const books = await getBook(user.id)
     return res.status(200).json({
       code: 200,
       token: token,
@@ -49,6 +51,7 @@ const login = async (req, res, next) => {
         id: user.id,
         email: user.email,
         name: user.name,
+        books: books,
       },
     })
   } catch (err) {
