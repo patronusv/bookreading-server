@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.1",
     "info": {
-        "version": "1.0.0",
+        "version": "1.0.1",
         "title": "Books reading",
         "description": "Documentation for server use"
     },
@@ -146,7 +146,7 @@
         },
         "/library" : {
             "post" : {
-                "tags": ["library"],
+                "tags": ["Book"],
                 "summary": "add book",
                 "parameters": [],
                 "requestBody": {
@@ -168,6 +168,16 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/AddBookToLibrarySuccess"
+                                }
+                            }
+                        }
+                    },
+                     "401": {
+                        "description": "not authorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LogoutErrorResponse"
                                 }
                             }
                         }
@@ -367,6 +377,36 @@
                                 "type": "integer",
                                 "description": "number of pages",
                                 "example": 503
+                            },
+                            "_id": {
+                                "type": "string",
+                                "description": "book id",
+                                "example": "608101a2da271e15686cc1aa"
+                            },
+                            "status": {
+                                "type": "string",
+                                "description": "status of the book",
+                                "example": "WillRead"
+                            },
+                            "currentPage": {
+                                "type": "integer",
+                                "description": "curren reading page",
+                                "example": 0
+                            },
+                            "review": {
+                                "type": "string",
+                                "description": "rewiew about the book",
+                                "example": "One of the great book for ever!"
+                            },
+                               "rating": {
+                                "type": "string",
+                                "description": "rating of the book",
+                                "example": "5"
+                            },
+                               "owner": {
+                                "type": "string",
+                                "description": "owner of the book",
+                                "example": "6081045d00070f0d187a7b1d"
                             }
                         }
                     }

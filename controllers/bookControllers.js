@@ -4,7 +4,7 @@
      const userId =  req.user._id
        try {
         const result = await addBook(userId, req.body);
-        return res.json({status: 'success', code: 201, data: result})
+        return res.status(201).json({status: 'success', code: 201, data: result})
     }catch(e) {
         next(e)
     }
