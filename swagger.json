@@ -172,6 +172,16 @@
                             }
                         }
                     },
+                     "400": {
+                        "description": "missing required field or field validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AddBookValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
                      "401": {
                         "description": "not authorized",
                         "content": {
@@ -493,6 +503,21 @@
                                 "example": "6081045d00070f0d187a7b1d"
                             }
                         }
+                    }
+                }
+            },
+            "AddBookValidationErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 400
+                    },
+                    "message": {
+                        "type": "string",
+                        "decription": "problem description",
+                        "example": "Title of a book is required."
                     }
                 }
             }
