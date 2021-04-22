@@ -13,6 +13,7 @@ const { DB_HOST } = process.env
 
 const bookRouter = require('./routes/api/bookRoutes')
 const authRouter = require('./routes/api/authRoutes')
+const trainingRouter = require('./routes/api/trainingRoutes')
 
 const app = express()
 
@@ -26,6 +27,7 @@ require('./config/passport')
 
 app.use('/api/auth', authRouter)
 app.use('/api/library', bookRouter)
+app.use('/api/training', trainingRouter)
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 

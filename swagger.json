@@ -31,7 +31,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/RegistrationAndLoginRequest"
+                                "$ref": "#/components/schemas/RegistrationRequest"
                             }
                         }
                     }
@@ -81,7 +81,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/RegistrationAndLoginRequest"
+                                "$ref": "#/components/schemas/LoginRequest"
                             }
                         }
                     }
@@ -190,9 +190,9 @@
 
     "components": {
         "schemas": {
-            "RegistrationAndLoginRequest": {
+            "RegistrationRequest": {
                 "type": "object",
-                "required": ["email", "password"],
+                "required": ["email, password, name"],
                 "properties": {
                     "email": {
                         "type": "string",
@@ -203,6 +203,11 @@
                         "type": "string",
                         "description": "user password",
                         "example": "Qwerty_1"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "user name",
+                        "example": "Rick Sanchez"
                     }
                 }
             },
@@ -217,7 +222,7 @@
                     "message": {
                         "type": "string",
                         "decription": "problem description",
-                        "example": "Missing required email or password field."
+                        "example": "Email is required."
                     }
                 }
             },
@@ -253,6 +258,22 @@
                                 "format": "email"
                             }
                         }
+                    }
+                }
+            },
+            "LoginRequest": {
+                "type": "object",
+                "required": ["email, password"],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "user email adress",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "user password",
+                        "example": "Qwerty_1"
                     }
                 }
             },
@@ -296,6 +317,11 @@
                                 "type": "string",
                                 "description": "email of signed user",
                                 "format": "email"
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "user name",
+                                "example": "Rick Sanchez"
                             }
                         }
                     }
@@ -312,7 +338,7 @@
                     "message": {
                         "type": "string",
                         "decription": "problem description",
-                        "example": "Not authorized"
+                        "example": "Not authorized or no token provided"
                     }
                 }
             },

@@ -5,7 +5,7 @@ const guard = (req, res, next) => {
     if (!user || err || 'Bearer ' + user.token !== req.headers.authorization) {
       return res.status(401).json({
         code: 401,
-        message: 'Not authorized',
+        message: 'Not authorized or no token provided',
       })
     }
     req.user = user
