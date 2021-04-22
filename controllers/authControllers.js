@@ -3,7 +3,7 @@ const authServices = require('../models/services/authServices')
 
 const register = async (req, res, next) => {
   try {
-    const { email, password } = req.body
+    const { email, password, name } = req.body
     const user = await authServices.findUserByEmail(email)
     if (user) {
       return res.status(409).json({
@@ -11,7 +11,7 @@ const register = async (req, res, next) => {
         message: 'Email in use',
       })
     }
-    const newUser = await authServices.createNewUser(email, password)
+    const newUser = await authServices.createNewUser(email, password, name)
     if (newUser) {
       return res.status(201).json({
         code: 201,
@@ -48,6 +48,7 @@ const login = async (req, res, next) => {
       user: {
         id: user.id,
         email: user.email,
+        name: user.name,
       },
     })
   } catch (err) {
