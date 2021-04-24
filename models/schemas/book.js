@@ -24,7 +24,7 @@ const bookSchema = new Schema (
     },
     currentPage: {
         type: Number,
-        default: 0
+        default: 0,
     },
     review: {
         type: String,
@@ -37,10 +37,22 @@ const bookSchema = new Schema (
     owner: {
       type: SchemaTypes.ObjectId,
       ref: 'user'
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false
     }
-},
+    },
  { versionKey: false, timestamp: true }
 )
+
+bookSchema.methods.corrCurrentPage = function (currentPage) {
+    if(!this.currentPage){
+        this.currentPage > this.page
+        return false
+    }
+    return true
+};
 
 const Book = model('book', bookSchema)
 

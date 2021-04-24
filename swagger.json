@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.1",
     "info": {
-        "version": "1.0.2",
+        "version": "1.0.3",
         "title": "Books reading",
         "description": "Documentation for server use"
     },
@@ -238,6 +238,74 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/GuardErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+                
+            }
+        },
+        "/library/": {
+            "patch" : {
+                "tags": ["Book"],
+                "summary": "add book",
+                "parameters": [{
+                    "in": "path",
+                    "name": "id",
+                    "reqyired": true,
+                    "type": "string",
+                    "description": "book id"
+                }],
+                "requestBody": {
+                    "description": "book object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateBookRequest"
+                            }
+                        }
+                    }
+                },
+                "security": [{"Bearer": []}],
+                "responses": {
+                    "201": {
+                        "description": "book added",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AddBookToLibrarySuccess"
+                                }
+                            }
+                        }
+                    },
+                     "400": {
+                        "description": "Current page is out of page limit",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CurrentPageOutOfPageLimit"
+                                }
+                            }
+                        }
+                    },
+                     "401": {
+                        "description": "not authorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GuardErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BookIsNotFound"
                                 }
                             }
                         }
@@ -527,6 +595,49 @@
                     }
                 }
             },
+            "UpdateBookRequest": {
+                "type": "object",
+                "required": [],
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "description": "title of a book",
+                        "example": "A Song of Ice and Fire"
+                    },
+                    "author": {
+                        "type": "string",
+                        "description": "author of a book",
+                        "example": "George R. R. Martin"
+                    },
+                    "year": {
+                        "type": "integer",
+                        "description": "year of publication",
+                        "example": 2012
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "description": "number of pages",
+                        "example": 503
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "WillRead, Reading, aveRead"
+                    },
+                    "currentPage": {
+                        "type": "integer"
+                    },
+                    "review": {
+                        "type": "string"
+                    },
+                    "rating" : {
+                        "type": "string"
+                    },
+                    "isDeleted": {
+                        "type": "boolean",
+                        "example": false
+                    }
+                }
+            },
             "AddBookToLibrarySuccess": {
                 "type": "object",
                 "properties": {
@@ -592,6 +703,11 @@
                                 "type": "string",
                                 "description": "owner of the book",
                                 "example": "6081045d00070f0d187a7b1d"
+                            },
+                            "isDeleted": {
+                                "type": "boolean",
+                                "description": "is book active",
+                                "example": false
                             }
                         }
                     }
@@ -609,6 +725,36 @@
                         "type": "string",
                         "decription": "problem description",
                         "example": "Title of a book is required."
+                    }
+                }
+            },
+              "CurrentPageOutOfPageLimit": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 400
+                    },
+                    "message": {
+                        "type": "string",
+                        "decription": "problem description",
+                        "example": "Current page is out of page limit."
+                    }
+                }
+            },
+            "BookIsNotFound": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 404
+                    },
+                    "message": {
+                        "type": "string",
+                        "decription": "problem description",
+                        "example": "Not found."
                     }
                 }
             }
