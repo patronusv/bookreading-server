@@ -24,7 +24,7 @@ const update = async (req, res, next) => {
     const result = await findOneBook(req.params.id)
 
     if(!result){
-        return res.status(404).json({ status: "error", code: 40, message: "Not found"})
+        return res.status(404).json({ status: "error", code: 404, message: "Not found"})
         }
     const bookPages = result.pages
     const newCurrentPage = req.body.currentPage;
