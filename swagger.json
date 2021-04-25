@@ -245,15 +245,15 @@
                 }
                 
             }
-        },
-        "/library/": {
+        }, 
+        "/library/{id}" : {
             "patch" : {
                 "tags": ["Book"],
                 "summary": "add book",
                 "parameters": [{
                     "in": "path",
                     "name": "id",
-                    "reqyired": true,
+                    "required": true,
                     "type": "string",
                     "description": "book id"
                 }],
@@ -706,7 +706,7 @@
                             },
                             "isDeleted": {
                                 "type": "boolean",
-                                "description": "is book active",
+                                "description": "if isDeleted true book is not in list",
                                 "example": false
                             }
                         }
