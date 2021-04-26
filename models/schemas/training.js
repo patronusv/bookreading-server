@@ -5,31 +5,31 @@ const trainingSchema = new Schema(
   {
     startDate: {
       type: String,
-      required: [true, 'start date is required'],
     },
 
     finishDate: {
       type: String,
-      required: [true, 'finish date is required'],
     },
-
     books: [
       {
         type: SchemaTypes.ObjectId,
         ref: 'book',
       },
     ],
-
-    progress: [{ date: { type: String }, pageCount: { type: Number } }],
-
-    isComplited: { type: Boolean, default: false },
-
+    pagesTotal: {
+      type: Number,
+    },
+    pagesRead: {
+      type: Number,
+      default: 0,
+    },
+    progress: [{ date: String, pages: Number }],
     owner: {
       type: SchemaTypes.ObjectId,
       ref: 'user',
     },
   },
-  { versionKey: false, timestamps: true }
+  { versionKey: false }
 )
 
 const Training = mongoose.model('training', trainingSchema)
