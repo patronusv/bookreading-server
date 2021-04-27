@@ -22,10 +22,6 @@ const bookSchema = new Schema (
         enum: ['WillRead', 'Reading', 'HaveRead'],
         default: 'WillRead',
     },
-    currentPage: {
-        type: Number,
-        default: 0,
-    },
     review: {
         type: String,
         default: null            
@@ -46,13 +42,6 @@ const bookSchema = new Schema (
  { versionKey: false, timestamp: true }
 )
 
-bookSchema.methods.corrCurrentPage = function (currentPage) {
-    if(!this.currentPage){
-        this.currentPage > this.page
-        return false
-    }
-    return true
-};
 
 const Book = model('book', bookSchema)
 

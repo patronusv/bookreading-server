@@ -6,7 +6,7 @@ const addBook = (userId, body) => {
 
 // Book list by Owner
 const getBook = id => {
-  return Book.find({ owner: id, isDeleted: false })
+  return Book.find({ owner: id})
 }
 
 const findOneBook = ( bookId) => {
