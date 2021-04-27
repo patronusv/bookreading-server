@@ -1,5 +1,5 @@
 {
-    "openapi": "3.0.1",
+    "openapi": "3.0.2",
     "info": {
         "version": "1.0.3",
         "title": "Books reading",
@@ -280,17 +280,7 @@
                             }
                         }
                     },
-                     "400": {
-                        "description": "Current page is out of page limit",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CurrentPageOutOfPageLimit"
-                                }
-                            }
-                        }
-                    },
-                     "401": {
+                    "401": {
                         "description": "not authorized",
                         "content": {
                             "application/json": {
@@ -623,10 +613,7 @@
                         "type": "string",
                         "example": "WillRead, Reading, aveRead"
                     },
-                    "currentPage": {
-                        "type": "integer"
-                    },
-                    "review": {
+                        "review": {
                         "type": "string"
                     },
                     "rating" : {
@@ -684,11 +671,6 @@
                                 "description": "status of the book",
                                 "example": "WillRead"
                             },
-                            "currentPage": {
-                                "type": "integer",
-                                "description": "curren reading page",
-                                "example": 0
-                            },
                             "review": {
                                 "type": "string",
                                 "description": "rewiew about the book",
@@ -725,21 +707,6 @@
                         "type": "string",
                         "decription": "problem description",
                         "example": "Title of a book is required."
-                    }
-                }
-            },
-              "CurrentPageOutOfPageLimit": {
-                "type": "object",
-                "properties": {
-                    "code": {
-                        "type": "integer",
-                        "description": "status code",
-                        "example": 400
-                    },
-                    "message": {
-                        "type": "string",
-                        "decription": "problem description",
-                        "example": "Current page is out of page limit."
                     }
                 }
             },
