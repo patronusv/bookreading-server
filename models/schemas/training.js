@@ -19,6 +19,7 @@ const trainingSchema = new Schema(
     pagesTotal: {
       type: Number,
     },
+    endSteps: [Number],
     pagesRead: {
       type: Number,
       default: 0,
