@@ -4,6 +4,7 @@ const {
   findUserTraining,
   changeBookStatus,
 } = require('../models/services/trainingServices')
+const { updateBook } = require('../models/services/bookServices')
 
 const startTraining = async (req, res, next) => {
   try {
@@ -44,6 +45,16 @@ const addTrainingPages = async (req, res, next) => {
       training.progress[index].pages += pages
     }
     training.pagesRead += pages
+    let done = 0
+    for (const oneStep of training.endSteps) {
+      if (training.pagesRead >= oneStep.pages) {
+        await updateBook(oneStep.book, { status: 'HaveRead' })
+        done += 1
+      }
+    }
+    if (done > 0) {
+      training.endSteps.splice(0, done)
+    }
     await training.save()
     return res.status(201).json({
       code: 201,
