@@ -8,13 +8,31 @@ const { updateBook } = require('../models/services/bookServices')
 
 const startTraining = async (req, res, next) => {
   try {
+    const { startDate, finishDate, books } = req.body
+    const booksObj = []
+    for (const book of books) {
+      booksObj.push({ bookId: book })
+    }
     const userId = req.user.id
     const endSteps = await totalPagesCount(req.body.books)
-    const newTraining = await createTraining(req.body, endSteps, userId)
+    const newTraining = await createTraining(
+      startDate,
+      finishDate,
+      booksObj,
+      endSteps,
+      userId
+    )
     await changeBookStatus(req.body.books, 'Reading')
     return res.status(201).json({
       code: 201,
-      training: newTraining,
+      training: {
+        _id: newTraining._id,
+        startDate: newTraining.startDate,
+        finishDate: newTraining.finishDate,
+        books: newTraining.books,
+        pagesTotal: newTraining.pagesTotal,
+        pagesRead: newTraining.pagesRead,
+      },
     })
   } catch (e) {
     next(e)
@@ -58,7 +76,39 @@ const addTrainingPages = async (req, res, next) => {
     await training.save()
     return res.status(201).json({
       code: 201,
-      training: training,
+      training: {
+        _id: training._id,
+        books: training.books,
+        pagesRead: training.pagesRead,
+        progress: training.progress,
+      },
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
+const getTraining = async (req, res, next) => {
+  try {
+    const userId = req.user.id
+    const training = await findUserTraining(userId)
+    if (!training) {
+      return res.status(400).json({
+        code: 400,
+        message: 'Training not found',
+      })
+    }
+    return res.status(200).json({
+      code: 200,
+      training: {
+        _id: training._id,
+        startDate: training.startDate,
+        finishDate: training.finishDate,
+        books: training.books,
+        pagesTotal: training.pagesTotal,
+        pagesRead: training.pagesRead,
+        progress: training.progress,
+      },
     })
   } catch (e) {
     next(e)
@@ -68,4 +118,5 @@ const addTrainingPages = async (req, res, next) => {
 module.exports = {
   startTraining,
   addTrainingPages,
+  getTraining,
 }
