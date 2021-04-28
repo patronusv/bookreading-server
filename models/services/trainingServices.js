@@ -1,9 +1,17 @@
 const Training = require('../schemas/training')
 const { findOneBook, updateBook } = require('./bookServices')
 
-const createTraining = async (body, endSteps, userId) => {
+const createTraining = async (
+  startDate,
+  finishDate,
+  books,
+  endSteps,
+  userId
+) => {
   return await Training.create({
-    ...body,
+    startDate,
+    finishDate,
+    books,
     pagesTotal: endSteps[endSteps.length - 1].pages,
     endSteps,
     owner: userId,

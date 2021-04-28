@@ -12,8 +12,15 @@ const trainingSchema = new Schema(
     },
     books: [
       {
-        type: SchemaTypes.ObjectId,
-        ref: 'book',
+        bookId: {
+          type: SchemaTypes.ObjectId,
+          ref: 'book',
+        },
+        status: {
+          type: String,
+          enum: ['Reading', 'HaveRead'],
+          default: 'Reading',
+        },
       },
     ],
     pagesTotal: {
