@@ -88,7 +88,35 @@ const addTrainingPages = async (req, res, next) => {
   }
 }
 
+const getTraining = async (req, res, next) => {
+  try {
+    const userId = req.user.id
+    const training = await findUserTraining(userId)
+    if (!training) {
+      return res.status(400).json({
+        code: 400,
+        message: 'Training not found',
+      })
+    }
+    return res.status(200).json({
+      code: 200,
+      training: {
+        _id: training._id,
+        startDate: training.startDate,
+        finishDate: training.finishDate,
+        books: training.books,
+        pagesTotal: training.pagesTotal,
+        pagesRead: training.pagesRead,
+        progress: training.progress,
+      },
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
 module.exports = {
   startTraining,
   addTrainingPages,
+  getTraining,
 }

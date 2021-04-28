@@ -14,5 +14,6 @@ router.patch(
   addTrainingPagesRequire,
   trainingControllers.addTrainingPages
 )
+router.get('/', guard, trainingControllers.getTraining)
 
 module.exports = router
