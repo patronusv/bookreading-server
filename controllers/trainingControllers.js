@@ -67,6 +67,11 @@ const addTrainingPages = async (req, res, next) => {
     for (const oneStep of training.endSteps) {
       if (training.pagesRead >= oneStep.pages) {
         await updateBook(oneStep.book, { status: 'HaveRead' })
+        for (const book of training.books) {
+          if (book.bookId == oneStep.book) {
+            book.status = 'HaveRead'
+          }
+        }
         done += 1
       }
     }
