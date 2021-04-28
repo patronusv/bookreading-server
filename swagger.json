@@ -416,6 +416,45 @@
                         }
                     }
                 }
+            },
+            "get": {
+                "tags": ["Training"],
+                "summary": "user training information",
+                "parameters": [],
+                "requestBody": {},
+                "security": [{"Bearer": []}],
+                "responses": {
+                    "401": {
+                        "description": "not authorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GuardErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "training not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TrainingNotFoundErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetTrainingSuccessResponse"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     },
@@ -1033,6 +1072,107 @@
                                         }
                                     }
                                 }
+                            },
+                            "pagesRead": {
+                                "type": "integer",
+                                "description": "total pages read",
+                                "example": 500
+                            },
+                            "progress": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "_id": {
+                                            "type": "string",
+                                            "description": "day progress id",
+                                            "example": "6089478d1688222e705f6ecc"
+                                        },
+                                        "date": {
+                                            "type": "string",
+                                            "description": "day progress date",
+                                            "example": "2021-04-19"
+                                        },
+                                        "pages": {
+                                            "type": "integer",
+                                            "description": "pages read this day",
+                                            "example": 500
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "TrainingNotFoundErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 400
+                    },
+                    "message": {
+                        "type": "string",
+                        "decription": "problem description",
+                        "example": "Training not found"
+                    }
+                }
+            },
+            "GetTrainingSuccessResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 200
+                    },
+                    "training": {
+                        "type": "object",
+                        "properties": {
+                            "_id": {
+                                "type": "string",
+                                "description": "training id",
+                                "example": "60893ef20c8d512fa0c86b36"
+                            },
+                            "startDate": {
+                                "type": "string",
+                                "description": "training start date",
+                                "example": "2021-04-15"
+                            },
+                            "finishDate": {
+                                "type": "string",
+                                "description": "training finish date",
+                                "example": "2021-04-30"
+                            },
+                            "books": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "description": "book status",
+                                            "example": "Reading"
+                                        },
+                                        "_id": {
+                                            "type": "string",
+                                            "description": "current record id",
+                                            "example": "60893ef20c8d512fa0c86b37"
+                                        },
+                                        "bookId": {
+                                            "type": "string",
+                                            "description": "book id",
+                                            "example": "607ebf510c68de1ba45b9ef0"
+                                        }
+                                    }
+                                }
+                            },
+                            "pagesTotal": {
+                                "type": "integer",
+                                "description": "training pages summary",
+                                "example": 2803
                             },
                             "pagesRead": {
                                 "type": "integer",
