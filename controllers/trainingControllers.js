@@ -5,6 +5,7 @@ const {
   changeBookStatus,
 } = require('../models/services/trainingServices')
 const { updateBook } = require('../models/services/bookServices')
+const { changeTrainingStatus } = require('../models/services/authServices')
 
 const startTraining = async (req, res, next) => {
   try {
@@ -23,6 +24,7 @@ const startTraining = async (req, res, next) => {
       userId
     )
     await changeBookStatus(req.body.books, 'Reading')
+    await changeTrainingStatus(userId)
     return res.status(201).json({
       code: 201,
       training: {
@@ -78,8 +80,13 @@ const addTrainingPages = async (req, res, next) => {
     if (done > 0) {
       training.endSteps.splice(0, done)
     }
+    let toDelete = false
+    if (training.endSteps.length === 0) {
+      await changeTrainingStatus(userId)
+      toDelete = true
+    }
     await training.save()
-    return res.status(201).json({
+    res.status(201).json({
       code: 201,
       training: {
         _id: training._id,
@@ -88,6 +95,9 @@ const addTrainingPages = async (req, res, next) => {
         progress: training.progress,
       },
     })
+    if (toDelete) {
+      training.delete()
+    }
   } catch (e) {
     next(e)
   }

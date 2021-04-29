@@ -14,6 +14,10 @@ const userSchema = new Schema(
     name: {
       type: String,
     },
+    activeTraining: {
+      type: Boolean,
+      default: false,
+    },
     token: String,
   },
   { versionKey: false }

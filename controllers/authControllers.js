@@ -21,6 +21,7 @@ const register = async (req, res, next) => {
         code: 201,
         user: {
           email: newUser.email,
+          activeTraining: newUser.activeTraining,
         },
       })
     }
@@ -54,6 +55,7 @@ const login = async (req, res, next) => {
         id: user.id,
         email: user.email,
         name: user.name,
+        activeTraining: user.activeTraining,
         books: books,
       },
     })
@@ -165,6 +167,7 @@ const googleLogin = async (req, res, next) => {
         id: user.id,
         email: user.email,
         name: user.name,
+        activeTraining: user.activeTraining,
         books: books,
       },
     })
