@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.1",
     "info": {
-        "version": "1.0.4",
+        "version": "1.0.5",
         "title": "Books reading",
         "description": "Documentation for server use"
     },
@@ -527,6 +527,11 @@
                                 "type": "string",
                                 "description": "email of new user",
                                 "format": "email"
+                            },
+                            "activeTraining": {
+                                "type": "boolean",
+                                "description": "training status",
+                                "example": false
                             }
                         }
                     }
@@ -594,6 +599,11 @@
                                 "description": "user name",
                                 "example": "Rick Sanchez"
                             },
+                            "activeTraining": {
+                                "type": "boolean",
+                                "description": "training status",
+                                "example": false
+                            },
                             "books": {
                                 "type": "array",
                                 "items": {
@@ -628,11 +638,6 @@
                                             "type": "string",
                                             "description": "status of the book",
                                             "example": "WillRead"
-                                        },
-                                        "currentPage": {
-                                            "type": "integer",
-                                            "description": "curren reading page",
-                                            "example": 0
                                         },
                                         "review": {
                                             "type": "string",
