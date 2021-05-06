@@ -19,6 +19,7 @@ const userSchema = new Schema(
       default: false,
     },
     token: String,
+    refreshToken: String,
   },
   { versionKey: false }
 )
