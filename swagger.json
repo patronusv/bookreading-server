@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.2",
     "info": {
-        "version": "1.0.5",
+        "version": "1.0.6",
         "title": "Books reading",
         "description": "Documentation for server use"
     },
@@ -144,6 +144,37 @@
                     },
                     "204": {
                         "description": "logout success"
+                    }
+                }
+            }
+        },
+        "/auth/refresh": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "user refresh session",
+                "parameters": [],
+                "requestBody": {},
+                "security": [{"Bearer": []}],
+                "responses": {
+                    "401": {
+                        "description": "not authorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GuardErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "user success refresh",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RefreshSuccessResponse"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -568,8 +599,13 @@
                     },
                     "token": {
                         "type": "string",
-                        "description": "user session token",
+                        "description": "user access token",
                         "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRpbWNoZXI5MTFAZ21haWwuY29tIiwiaWF0IjoxNjE4OTQxMzc4LCJleHAiOjE2MTg5NDQ5Nzh9.tgNhlO1wfIHvg0NWqyargq1KB5m4UnSWHG6YZ7N1_OM"
+                    },
+                    "refreshToken": {
+                        "type": "string",
+                        "description": "user refresh token",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRpbWNoZXI5MTFAZ21haWwuY29tIiwiaWF0IjoxNjIwMjk3MDI0LCJleHAiOjE2MjA5MDE4MjR9.EN5IRvM0KeSh8-v3HzFFUSgJciVxAFd8VV-PRp5cfWA"
                     },
                     "user": {
                         "type": "object",
@@ -663,6 +699,104 @@
                         "type": "string",
                         "decription": "problem description",
                         "example": "Not authorized or no token provided"
+                    }
+                }
+            },
+            "RefreshSuccessResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 200
+                    },
+                    "newToken": {
+                        "type": "string",
+                        "description": "user access token",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRpbWNoZXI5MTFAZ21haWwuY29tIiwiaWF0IjoxNjE4OTQxMzc4LCJleHAiOjE2MTg5NDQ5Nzh9.tgNhlO1wfIHvg0NWqyargq1KB5m4UnSWHG6YZ7N1_OM"
+                    },
+                    "newRefreshToken": {
+                        "type": "string",
+                        "description": "user refresh token",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRpbWNoZXI5MTFAZ21haWwuY29tIiwiaWF0IjoxNjIwMjk3MDI0LCJleHAiOjE2MjA5MDE4MjR9.EN5IRvM0KeSh8-v3HzFFUSgJciVxAFd8VV-PRp5cfWA"
+                    },
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "description": "user id",
+                                "example": "607f15b136cdb42c38bae2b8"
+                            },
+                            "email": {
+                                "type": "string",
+                                "description": "email of signed user",
+                                "format": "email"
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "user name",
+                                "example": "Rick Sanchez"
+                            },
+                            "activeTraining": {
+                                "type": "boolean",
+                                "description": "training status",
+                                "example": false
+                            },
+                            "books": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "description": "title of a book",
+                                            "example": "A Song of Ice and Fire"
+                                        },
+                                        "author": {
+                                            "type": "string",
+                                            "description": "author of a book",
+                                            "example": "George R. R. Martin"
+                                        },
+                                        "year": {
+                                            "type": "integer",
+                                            "description": "year of publication",
+                                            "example": 2012
+                                        },
+                                        "pages": {
+                                            "type": "integer",
+                                            "description": "number of pages",
+                                            "example": 503
+                                        },
+                                        "_id": {
+                                            "type": "string",
+                                            "description": "book id",
+                                            "example": "608101a2da271e15686cc1aa"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "description": "status of the book",
+                                            "example": "WillRead"
+                                        },
+                                        "review": {
+                                            "type": "string",
+                                            "description": "rewiew about the book",
+                                            "example": "One of the great book for ever!"
+                                        },
+                                        "rating": {
+                                            "type": "string",
+                                            "description": "rating of the book",
+                                            "example": "5"
+                                        },
+                                        "owner": {
+                                            "type": "string",
+                                            "description": "owner of the book",
+                                            "example": "6081045d00070f0d187a7b1d"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             },

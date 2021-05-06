@@ -46,11 +46,16 @@ const login = async (req, res, next) => {
     const token = jwt.sign(payload, process.env.SECRET_KEY, {
       expiresIn: '1h',
     })
+    const refreshToken = jwt.sign(payload, process.env.SECRET_KEY, {
+      expiresIn: '7d',
+    })
     await authServices.updateToken(user.id, token)
+    await authServices.updateRefreshToken(user.id, refreshToken)
     const books = await getBook(user.id)
     return res.status(200).json({
       code: 200,
       token: token,
+      refreshToken: refreshToken,
       user: {
         id: user.id,
         email: user.email,
@@ -68,7 +73,40 @@ const logout = async (req, res, next) => {
   try {
     const { _id } = req.user
     await authServices.updateToken(_id, '')
+    await authServices.updateRefreshToken(_id, '')
     return res.status(204).json()
+  } catch (err) {
+    next(err)
+  }
+}
+
+const refresh = async (req, res, next) => {
+  try {
+    const { user } = req
+    const payload = {
+      email: user.email,
+    }
+    const token = jwt.sign(payload, process.env.SECRET_KEY, {
+      expiresIn: '1h',
+    })
+    const refreshToken = jwt.sign(payload, process.env.SECRET_KEY, {
+      expiresIn: '7d',
+    })
+    await authServices.updateToken(user.id, token)
+    await authServices.updateRefreshToken(user.id, refreshToken)
+    const books = await getBook(user.id)
+    return res.status(200).json({
+      code: 200,
+      newToken: token,
+      newRefreshToken: refreshToken,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        activeTraining: user.activeTraining,
+        books: books,
+      },
+    })
   } catch (err) {
     next(err)
   }
@@ -158,11 +196,16 @@ const googleLogin = async (req, res, next) => {
     token = jwt.sign(payload, process.env.SECRET_KEY, {
       expiresIn: '1h',
     })
+    const refreshToken = jwt.sign(payload, process.env.SECRET_KEY, {
+      expiresIn: '7d',
+    })
     await authServices.updateToken(user.id, token)
+    await authServices.updateRefreshToken(user.id, refreshToken)
     const books = await getBook(user.id)
     return res.status(200).json({
       code: 200,
       token: token,
+      refreshToken: refreshToken,
       user: {
         id: user.id,
         email: user.email,
@@ -180,6 +223,7 @@ module.exports = {
   register,
   login,
   logout,
+  refresh,
   googleAuth,
   googleRedirect,
   googleLogin,
