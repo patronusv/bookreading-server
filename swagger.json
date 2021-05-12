@@ -1,13 +1,13 @@
 {
     "openapi": "3.0.2",
     "info": {
-        "version": "1.0.6",
-        "title": "Books reading",
-        "description": "Documentation for server use"
+        "version": "1.0.7",
+        "title": "Books Reading",
+        "description": "Documentation for server use. [Backend github repository](https://github.com/patronusv/bookreading-server)"
     },
     "consumes": ["application/json"],
     "produces": ["application/json"],
-    "servers": [{"url": "http://localhost:5000/api"}],
+    "servers": [{"url": "https://bookreading-team2.herokuapp.com/api"}],
     "tags": [
         {
             "name": "Auth",
