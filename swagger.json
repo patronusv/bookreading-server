@@ -1,0 +1,1324 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "version": "1.0.6",
+        "title": "Books reading",
+        "description": "Documentation for server use"
+    },
+    "consumes": ["application/json"],
+    "produces": ["application/json"],
+    "servers": [{"url": "http://localhost:5000/api"}],
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Authorization endpoints"
+        },
+        {
+            "name": "Book",
+            "description": "Library endpoints"
+        },
+        {
+            "name": "Training",
+            "description": "Training endpoints"
+        }
+    ],
+
+    "paths": {
+        "/auth/register": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "user registration",
+                "parameters": [],
+                "requestBody": {
+                    "description": "registration object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegistrationRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "missing required field or field validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegistrationAndLoginValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "email in use",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegistrationEmailInUseErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "user created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegistrationSuccessResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "user login",
+                "parameters": [],
+                "requestBody": {
+                    "description": "login object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "missing required field or field validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegistrationAndLoginValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "email or password is wrong",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "user success login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginSuccessResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "user logout",
+                "parameters": [],
+                "requestBody": {},
+                "security": [{"Bearer": []}],
+                "responses": {
+                    "401": {
+                        "description": "not authorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GuardErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "logout success"
+                    }
+                }
+            }
+        },
+        "/auth/refresh": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "user refresh session",
+                "parameters": [],
+                "requestBody": {},
+                "security": [{"Bearer": []}],
+                "responses": {
+                    "401": {
+                        "description": "not authorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GuardErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "user success refresh",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RefreshSuccessResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/user": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "user login by google token",
+                "parameters": [],
+                "requestBody": {
+                    "description": "login object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "missing required field",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MissingTokenErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "wrong token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "user success login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginSuccessResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/library" : {
+            "post" : {
+                "tags": ["Book"],
+                "summary": "add book",
+                "parameters": [],
+                "requestBody": {
+                    "description": "book object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddBookToLibraryRequest"
+                            }
+                        }
+                    }
+                },
+                "security": [{"Bearer": []}],
+                "responses": {
+                    "201": {
+                        "description": "book added",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AddBookToLibrarySuccess"
+                                }
+                            }
+                        }
+                    },
+                     "400": {
+                        "description": "missing required field or field validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AddBookValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                     "401": {
+                        "description": "not authorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GuardErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+                
+            }
+        }, 
+        "/library/{id}" : {
+            "patch" : {
+                "tags": ["Book"],
+                "summary": "add book",
+                "parameters": [{
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "type": "string",
+                    "description": "book id"
+                }],
+                "requestBody": {
+                    "description": "book object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateBookRequest"
+                            }
+                        }
+                    }
+                },
+                "security": [{"Bearer": []}],
+                "responses": {
+                    "201": {
+                        "description": "book added",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AddBookToLibrarySuccess"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "not authorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GuardErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BookIsNotFound"
+                                }
+                            }
+                        }
+                    }
+                }
+                
+            }
+        },
+        "/training": {
+            "post": {
+                "tags": ["Training"],
+                "summary": "training creation",
+                "parameters": [],
+                "requestBody": {
+                    "description": "training object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateTrainingRequest"
+                            }
+                        }
+                    }
+                },
+                "security": [{"Bearer": []}],
+                "responses": {
+                    "401": {
+                        "description": "not authorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GuardErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "missing required field",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateTrainingMissingFieldErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "training created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateTrainingSuccessResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": ["Training"],
+                "summary": "training updating",
+                "parameters": [],
+                "requestBody": {
+                    "description": "progress object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateTrainingRequest"
+                            }
+                        }
+                    }
+                },
+                "security": [{"Bearer": []}],
+                "responses": {
+                    "401": {
+                        "description": "not authorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GuardErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "missing required field or training not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateTrainingMissingFieldErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "training updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateTrainingSuccessResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": ["Training"],
+                "summary": "user training information",
+                "parameters": [],
+                "requestBody": {},
+                "security": [{"Bearer": []}],
+                "responses": {
+                    "401": {
+                        "description": "not authorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GuardErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "training not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TrainingNotFoundErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetTrainingSuccessResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+
+    "components": {
+        "schemas": {
+            "RegistrationRequest": {
+                "type": "object",
+                "required": ["email", "password", "name"],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "user email adress",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "user password",
+                        "example": "Qwerty_1"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "user name",
+                        "example": "Rick Sanchez"
+                    }
+                }
+            },
+            "RegistrationAndLoginValidationErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 400
+                    },
+                    "message": {
+                        "type": "string",
+                        "decription": "problem description",
+                        "example": "Email is required."
+                    }
+                }
+            },
+            "RegistrationEmailInUseErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 409
+                    },
+                    "message": {
+                        "type": "string",
+                        "decription": "problem description",
+                        "example": "Email in use"
+                    }
+                }
+            },
+            "RegistrationSuccessResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 201
+                    },
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "email": {
+                                "type": "string",
+                                "description": "email of new user",
+                                "format": "email"
+                            },
+                            "activeTraining": {
+                                "type": "boolean",
+                                "description": "training status",
+                                "example": false
+                            }
+                        }
+                    }
+                }
+            },
+            "LoginRequest": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "user email adress",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "user password",
+                        "example": "Qwerty_1"
+                    }
+                }
+            },
+            "LoginErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 401
+                    },
+                    "message": {
+                        "type": "string",
+                        "decription": "problem description",
+                        "example": "Email or password is wrong"
+                    }
+                }
+            },
+            "LoginSuccessResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 200
+                    },
+                    "token": {
+                        "type": "string",
+                        "description": "user access token",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRpbWNoZXI5MTFAZ21haWwuY29tIiwiaWF0IjoxNjE4OTQxMzc4LCJleHAiOjE2MTg5NDQ5Nzh9.tgNhlO1wfIHvg0NWqyargq1KB5m4UnSWHG6YZ7N1_OM"
+                    },
+                    "refreshToken": {
+                        "type": "string",
+                        "description": "user refresh token",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRpbWNoZXI5MTFAZ21haWwuY29tIiwiaWF0IjoxNjIwMjk3MDI0LCJleHAiOjE2MjA5MDE4MjR9.EN5IRvM0KeSh8-v3HzFFUSgJciVxAFd8VV-PRp5cfWA"
+                    },
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "description": "user id",
+                                "example": "607f15b136cdb42c38bae2b8"
+                            },
+                            "email": {
+                                "type": "string",
+                                "description": "email of signed user",
+                                "format": "email"
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "user name",
+                                "example": "Rick Sanchez"
+                            },
+                            "activeTraining": {
+                                "type": "boolean",
+                                "description": "training status",
+                                "example": false
+                            },
+                            "books": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "description": "title of a book",
+                                            "example": "A Song of Ice and Fire"
+                                        },
+                                        "author": {
+                                            "type": "string",
+                                            "description": "author of a book",
+                                            "example": "George R. R. Martin"
+                                        },
+                                        "year": {
+                                            "type": "integer",
+                                            "description": "year of publication",
+                                            "example": 2012
+                                        },
+                                        "pages": {
+                                            "type": "integer",
+                                            "description": "number of pages",
+                                            "example": 503
+                                        },
+                                        "_id": {
+                                            "type": "string",
+                                            "description": "book id",
+                                            "example": "608101a2da271e15686cc1aa"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "description": "status of the book",
+                                            "example": "WillRead"
+                                        },
+                                        "review": {
+                                            "type": "string",
+                                            "description": "rewiew about the book",
+                                            "example": "One of the great book for ever!"
+                                        },
+                                        "rating": {
+                                            "type": "string",
+                                            "description": "rating of the book",
+                                            "example": "5"
+                                        },
+                                        "owner": {
+                                            "type": "string",
+                                            "description": "owner of the book",
+                                            "example": "6081045d00070f0d187a7b1d"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "GuardErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 401
+                    },
+                    "message": {
+                        "type": "string",
+                        "decription": "problem description",
+                        "example": "Not authorized or no token provided"
+                    }
+                }
+            },
+            "RefreshSuccessResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 200
+                    },
+                    "newToken": {
+                        "type": "string",
+                        "description": "user access token",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRpbWNoZXI5MTFAZ21haWwuY29tIiwiaWF0IjoxNjE4OTQxMzc4LCJleHAiOjE2MTg5NDQ5Nzh9.tgNhlO1wfIHvg0NWqyargq1KB5m4UnSWHG6YZ7N1_OM"
+                    },
+                    "newRefreshToken": {
+                        "type": "string",
+                        "description": "user refresh token",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRpbWNoZXI5MTFAZ21haWwuY29tIiwiaWF0IjoxNjIwMjk3MDI0LCJleHAiOjE2MjA5MDE4MjR9.EN5IRvM0KeSh8-v3HzFFUSgJciVxAFd8VV-PRp5cfWA"
+                    },
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "description": "user id",
+                                "example": "607f15b136cdb42c38bae2b8"
+                            },
+                            "email": {
+                                "type": "string",
+                                "description": "email of signed user",
+                                "format": "email"
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "user name",
+                                "example": "Rick Sanchez"
+                            },
+                            "activeTraining": {
+                                "type": "boolean",
+                                "description": "training status",
+                                "example": false
+                            },
+                            "books": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "description": "title of a book",
+                                            "example": "A Song of Ice and Fire"
+                                        },
+                                        "author": {
+                                            "type": "string",
+                                            "description": "author of a book",
+                                            "example": "George R. R. Martin"
+                                        },
+                                        "year": {
+                                            "type": "integer",
+                                            "description": "year of publication",
+                                            "example": 2012
+                                        },
+                                        "pages": {
+                                            "type": "integer",
+                                            "description": "number of pages",
+                                            "example": 503
+                                        },
+                                        "_id": {
+                                            "type": "string",
+                                            "description": "book id",
+                                            "example": "608101a2da271e15686cc1aa"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "description": "status of the book",
+                                            "example": "WillRead"
+                                        },
+                                        "review": {
+                                            "type": "string",
+                                            "description": "rewiew about the book",
+                                            "example": "One of the great book for ever!"
+                                        },
+                                        "rating": {
+                                            "type": "string",
+                                            "description": "rating of the book",
+                                            "example": "5"
+                                        },
+                                        "owner": {
+                                            "type": "string",
+                                            "description": "owner of the book",
+                                            "example": "6081045d00070f0d187a7b1d"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "UserRequest": {
+                "type": "object",
+                "required": ["token"],
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "description": "token from google auth",
+                        "example": "b9908e86-ae11-4613-b22e-a57ec919e199"
+                    }
+                }
+            },
+            "MissingTokenErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 400
+                    },
+                    "message": {
+                        "type": "string",
+                        "decription": "problem description",
+                        "example": "Token is required"
+                    }
+                }
+            },
+            "UserErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 401
+                    },
+                    "message": {
+                        "type": "string",
+                        "decription": "problem description",
+                        "example": "Wrong token, user not found"
+                    }
+                }
+            },
+             "AddBookToLibraryRequest": {
+                "type": "object",
+                "required": ["title", "pages"],
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "description": "title of a book",
+                        "example": "A Song of Ice and Fire"
+                    },
+                    "author": {
+                        "type": "string",
+                        "description": "author of a book",
+                        "example": "George R. R. Martin"
+                    },
+                    "year": {
+                        "type": "integer",
+                        "description": "year of publication",
+                        "example": 2012
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "description": "number of pages",
+                        "example": 503
+                    }
+                }
+            },
+            "UpdateBookRequest": {
+                "type": "object",
+                "required": [],
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "description": "title of a book",
+                        "example": "A Song of Ice and Fire"
+                    },
+                    "author": {
+                        "type": "string",
+                        "description": "author of a book",
+                        "example": "George R. R. Martin"
+                    },
+                    "year": {
+                        "type": "integer",
+                        "description": "year of publication",
+                        "example": 2012
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "description": "number of pages",
+                        "example": 503
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "WillRead, Reading, aveRead"
+                    },
+                        "review": {
+                        "type": "string"
+                    },
+                    "rating" : {
+                        "type": "string"
+                    },
+                    "isDeleted": {
+                        "type": "boolean",
+                        "example": false
+                    }
+                }
+            },
+            "AddBookToLibrarySuccess": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 201
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "status code",
+                        "example": "success"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "title": {
+                                "type": "string",
+                                "description": "title of a book",
+                                "example": "A Song of Ice and Fire"
+                            },
+                            "author": {
+                                "type": "string",
+                                "description": "author of a book",
+                                "example": "George R. R. Martin"
+                            },
+                            "year": {
+                                "type": "integer",
+                                "description": "year of publication",
+                                "example": 2012
+                            },
+                            "pages": {
+                                "type": "integer",
+                                "description": "number of pages",
+                                "example": 503
+                            },
+                            "_id": {
+                                "type": "string",
+                                "description": "book id",
+                                "example": "608101a2da271e15686cc1aa"
+                            },
+                            "status": {
+                                "type": "string",
+                                "description": "status of the book",
+                                "example": "WillRead"
+                            },
+                            "review": {
+                                "type": "string",
+                                "description": "rewiew about the book",
+                                "example": "One of the great book for ever!"
+                            },
+                               "rating": {
+                                "type": "string",
+                                "description": "rating of the book",
+                                "example": "5"
+                            },
+                               "owner": {
+                                "type": "string",
+                                "description": "owner of the book",
+                                "example": "6081045d00070f0d187a7b1d"
+                            },
+                            "isDeleted": {
+                                "type": "boolean",
+                                "description": "if isDeleted true book is not in list",
+                                "example": false
+                            }
+                        }
+                    }
+                }
+            },
+            "AddBookValidationErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 400
+                    },
+                    "message": {
+                        "type": "string",
+                        "decription": "problem description",
+                        "example": "Title of a book is required."
+                    }
+                }
+            },
+            "BookIsNotFound": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 404
+                    },
+                    "message": {
+                        "type": "string",
+                        "decription": "problem description",
+                        "example": "Not found."
+                    }
+                }
+            },
+            "CreateTrainingRequest": {
+                "type": "object",
+                "required": ["startDate", "finishDate", "books"],
+                "properties": {
+                    "startDate": {
+                        "type": "string",
+                        "description": "training start date",
+                        "example": "2021-04-15"
+                    },
+                    "finishDate": {
+                        "type": "string",
+                        "description": "training finish date",
+                        "example": "2021-04-30"
+                    },
+                    "books": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "description": "book id",
+                            "example": "607ebf510c68de1ba45b9ef0"
+                        }
+                    }
+                }
+            },
+            "CreateTrainingMissingFieldErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 400
+                    },
+                    "message": {
+                        "type": "string",
+                        "decription": "problem description",
+                        "example": "finishDate is required."
+                    }
+                }
+            },
+            "CreateTrainingSuccessResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 201
+                    },
+                    "training": {
+                        "type": "object",
+                        "properties": {
+                            "_id": {
+                                "type": "string",
+                                "description": "training id",
+                                "example": "60893ef20c8d512fa0c86b36"
+                            },
+                            "startDate": {
+                                "type": "string",
+                                "description": "training start date",
+                                "example": "2021-04-15"
+                            },
+                            "finishDate": {
+                                "type": "string",
+                                "description": "training finish date",
+                                "example": "2021-04-30"
+                            },
+                            "books": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "description": "book status",
+                                            "example": "Reading"
+                                        },
+                                        "_id": {
+                                            "type": "string",
+                                            "description": "current record id",
+                                            "example": "60893ef20c8d512fa0c86b37"
+                                        },
+                                        "bookId": {
+                                            "type": "string",
+                                            "description": "book id",
+                                            "example": "607ebf510c68de1ba45b9ef0"
+                                        }
+                                    }
+                                }
+                            },
+                            "pagesTotal": {
+                                "type": "integer",
+                                "description": "training pages summary",
+                                "example": 2803
+                            },
+                            "pagesRead": {
+                                "type": "integer",
+                                "description": "total pages read",
+                                "example": 0
+                            }                            
+                        }
+                    }
+                }
+            },
+            "UpdateTrainingRequest": {
+                "type": "object",
+                "required": ["date", "pages"],
+                "properties": {
+                    "date": {
+                        "type": "string",
+                        "description": "training day",
+                        "example": "2021-04-19"
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "description": "pages read",
+                        "example": 500
+                    }
+                }
+            },
+            "UpdateTrainingMissingFieldErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 400
+                    },
+                    "message": {
+                        "type": "string",
+                        "decription": "problem description",
+                        "example": "Pages is required."
+                    }
+                }
+            },
+            "UpdateTrainingSuccessResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 201
+                    },
+                    "training": {
+                        "type": "object",
+                        "properties": {
+                            "_id": {
+                                "type": "string",
+                                "description": "training id",
+                                "example": "60893ef20c8d512fa0c86b36"
+                            },
+                            "books": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "description": "book status",
+                                            "example": "Reading"
+                                        },
+                                        "_id": {
+                                            "type": "string",
+                                            "description": "current record id",
+                                            "example": "60893ef20c8d512fa0c86b37"
+                                        },
+                                        "bookId": {
+                                            "type": "string",
+                                            "description": "book id",
+                                            "example": "607ebf510c68de1ba45b9ef0"
+                                        }
+                                    }
+                                }
+                            },
+                            "pagesRead": {
+                                "type": "integer",
+                                "description": "total pages read",
+                                "example": 500
+                            },
+                            "progress": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "_id": {
+                                            "type": "string",
+                                            "description": "day progress id",
+                                            "example": "6089478d1688222e705f6ecc"
+                                        },
+                                        "date": {
+                                            "type": "string",
+                                            "description": "day progress date",
+                                            "example": "2021-04-19"
+                                        },
+                                        "pages": {
+                                            "type": "integer",
+                                            "description": "pages read this day",
+                                            "example": 500
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "TrainingNotFoundErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 400
+                    },
+                    "message": {
+                        "type": "string",
+                        "decription": "problem description",
+                        "example": "Training not found"
+                    }
+                }
+            },
+            "GetTrainingSuccessResponse": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "status code",
+                        "example": 200
+                    },
+                    "training": {
+                        "type": "object",
+                        "properties": {
+                            "_id": {
+                                "type": "string",
+                                "description": "training id",
+                                "example": "60893ef20c8d512fa0c86b36"
+                            },
+                            "startDate": {
+                                "type": "string",
+                                "description": "training start date",
+                                "example": "2021-04-15"
+                            },
+                            "finishDate": {
+                                "type": "string",
+                                "description": "training finish date",
+                                "example": "2021-04-30"
+                            },
+                            "books": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "description": "book status",
+                                            "example": "Reading"
+                                        },
+                                        "_id": {
+                                            "type": "string",
+                                            "description": "current record id",
+                                            "example": "60893ef20c8d512fa0c86b37"
+                                        },
+                                        "bookId": {
+                                            "type": "string",
+                                            "description": "book id",
+                                            "example": "607ebf510c68de1ba45b9ef0"
+                                        }
+                                    }
+                                }
+                            },
+                            "pagesTotal": {
+                                "type": "integer",
+                                "description": "training pages summary",
+                                "example": 2803
+                            },
+                            "pagesRead": {
+                                "type": "integer",
+                                "description": "total pages read",
+                                "example": 500
+                            },
+                            "progress": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "_id": {
+                                            "type": "string",
+                                            "description": "day progress id",
+                                            "example": "6089478d1688222e705f6ecc"
+                                        },
+                                        "date": {
+                                            "type": "string",
+                                            "description": "day progress date",
+                                            "example": "2021-04-19"
+                                        },
+                                        "pages": {
+                                            "type": "integer",
+                                            "description": "pages read this day",
+                                            "example": 500
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "Bearer": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}
